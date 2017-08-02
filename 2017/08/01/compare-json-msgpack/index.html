@@ -68,7 +68,7 @@
 <meta property="og:image" content="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack.png">
 <meta property="og:image" content="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/RedisLabsModules/rejson/master/docs/images/demo.gif">
-<meta property="og:updated_time" content="2017-08-02T05:48:06.248Z">
+<meta property="og:updated_time" content="2017-08-02T05:51:17.836Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="json与MessagePack比较">
 <meta name="twitter:description" content="比较msgpack与json的效率和体积，分析与redis结合的效果">
@@ -328,7 +328,31 @@
 </tr>
 </tbody>
 </table>
-<p>选取一个50K左右的文档，结果如下<br>||大小| 编码时间（秒）|解码时间（秒）|<br>|—|————-|:————-:|:—–:|<br>|base64|68740|0.000044|0.000195|<br>|msgpack|51556|0.000028|0.000040|</p>
+<p>选取一个50K左右的文档，结果如下</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>大小</th>
+<th style="text-align:center">编码时间（秒）</th>
+<th style="text-align:center">解码时间（秒）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base64</td>
+<td>68740</td>
+<td style="text-align:center">0.000044</td>
+<td style="text-align:center">0.000195</td>
+</tr>
+<tr>
+<td>msgpack</td>
+<td>51556</td>
+<td style="text-align:center">0.000028</td>
+<td style="text-align:center">0.000040</td>
+</tr>
+</tbody>
+</table>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过上述对比，发现MessagePack确实做到了更快更小，为什么没有流行的原因，就是json具有易读性，很多配置文件用json方式就可以看出。</p>
 <p>MessagePack虽然也有JS的库，但是用浏览器来解析MessagePack是一件很悲剧的事情，毕竟JSON是javascript亲生的，用起来自然比MessagePack要容易。所以如果是<strong>api接口或是和浏览器的通信，用JSON是天经地义的事情</strong>。</p>
 <p><strong>MessagePack主要用于结构化数据的缓存和存储</strong>，最常用的就是key-value存储系统，比如redis，不但占用空间更小，而且数据解析速度更快。另外在系统内部中，如果有用到微服务之间需要二进制文件的传输，也可以用MessagePack来代替base64，以获得更好的效率。</p>
