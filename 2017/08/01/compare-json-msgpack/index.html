@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="锡马,跑步,半马," />
+  <meta name="keywords" content="msgpack,redis," />
 
 
 
@@ -57,21 +57,22 @@
 
 
 
-<meta name="description" content="第一次半程马拉松点滴记录">
-<meta name="keywords" content="锡马,跑步,半马">
+<meta name="description" content="比较msgpack与json的效率和体积，分析与redis结合的效果">
+<meta name="keywords" content="msgpack,redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="半马处女跑笔记">
-<meta property="og:url" content="http://www.lifelonglearner.club/2015/03/27/first-marathon/index.html">
+<meta property="og:title" content="json与MessagePack比较">
+<meta property="og:url" content="http://www.lifelonglearner.club/2017/08/01/compare-json-msgpack/index.html">
 <meta property="og:site_name" content="山风徐来">
-<meta property="og:description" content="第一次半程马拉松点滴记录">
+<meta property="og:description" content="比较msgpack与json的效率和体积，分析与redis结合的效果">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww4.sinaimg.cn/bmiddle/6405dd36jw1eqmrb1xh2zj20b60b6q3p.jpg">
-<meta property="og:image" content="http://7xiar4.com1.z0.glb.clouddn.com/img/锡马成绩.jpg">
-<meta property="og:updated_time" content="2015-03-31T05:02:04.000Z">
+<meta property="og:image" content="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack.png">
+<meta property="og:image" content="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RedisLabsModules/rejson/master/docs/images/demo.gif">
+<meta property="og:updated_time" content="2017-08-02T05:48:06.248Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="半马处女跑笔记">
-<meta name="twitter:description" content="第一次半程马拉松点滴记录">
-<meta name="twitter:image" content="http://ww4.sinaimg.cn/bmiddle/6405dd36jw1eqmrb1xh2zj20b60b6q3p.jpg">
+<meta name="twitter:title" content="json与MessagePack比较">
+<meta name="twitter:description" content="比较msgpack与json的效率和体积，分析与redis结合的效果">
+<meta name="twitter:image" content="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack.png">
 
 
 
@@ -89,7 +90,7 @@
   };
 </script>
 
-  <title> 半马处女跑笔记 | 山风徐来 </title>
+  <title> json与MessagePack比较 | 山风徐来 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -225,7 +226,7 @@
             
             
               
-                半马处女跑笔记
+                json与MessagePack比较
               
             
           </h1>
@@ -237,8 +238,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-03-27T13:01:49+08:00" content="2015.03.27">
-              2015.03.27
+            <time itemprop="dateCreated" datetime="2017-08-01T20:02:52+08:00" content="2017.08.01">
+              2017.08.01
             </time>
           </span>
 
@@ -251,8 +252,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/跑步日记/" itemprop="url" rel="index">
-                    <span itemprop="name">跑步日记</span>
+                  <a href="/categories/代码与诗/" itemprop="url" rel="index">
+                    <span itemprop="name">代码与诗</span>
                   </a>
                 </span>
 
@@ -282,51 +283,58 @@
       
 
       
-        <p>懒癌发作，第一次半马的后记过了2个礼拜才开始动笔。现在的思维比刚跑完清晰了不少，不过有些记忆可能会有出入，难忘的越来越清晰，永远不想记起的也开始模糊起来。下面我就记录一下这次经历的一些有趣的事吧。</p>
-<p>##报名</p>
-<p>初次萌发去跑马拉松的念头，源自去年聚会时有位好友提到前两天跑了个马拉松。看着他当时轻松的表情，我其实已经被深深的震惊了。平时一起吃饭打麻将的朋友，竟然不声不响完成了这么一个壮举（没错当时就觉得这是个壮举），反观自己，上次能一口气跑5分钟是多久之前的事了？体重一天天增加，腰围一天天变大，每天机械的生活又贪图享乐，也许真如孙俪所说，堕落的开始就是远离运动。去参加马拉松是个不错的激励，至少为了参加比赛会去锻炼。</p>
+        <p>公司的架构是微服务，当前主要的工作内容和控制台相关，所以加入公司这么多天还没接触过数据库和缓存。直到不久前有小伙伴分享nodejs的时候提到了redis，才想起来之前项目用了MessagePack这个东西代替了json来封装数组。</p>
+<p>官方介绍：MessagePack是一种高效的二进制序列化格式。它允许您像JSON一样在多个语言之间交换数据。但是，它更快并且更小。小整数被编码为一个字节,和典型的短字符串只需要除了字符串本身的一个额外字节。<br>用一句话总结这个东东就是：</p>
 <blockquote>
-<p><div style="float:left"><br><img src="http://ww4.sinaimg.cn/bmiddle/6405dd36jw1eqmrb1xh2zj20b60b6q3p.jpg"><br></div></p>
-<p><div style="clear:both"></div><br>by 孙俪</p>
+<p>It’s like JSON.</p>
+<p>but fast and small.</p>
 </blockquote>
-<p>后来就是关注无锡马拉松15年的比赛时间，顺利的在14年底报上了名。因为担心自己无法完成这个任务，始终没有和别人说，也许当时的潜意识还是会有放弃的打算吧。</p>
+<p>虽然redis支持的数据类型很多，不过对于多维数组这种数据，还是只能序列化后以字符串存入，json就是现在最流行的序列化方式。这里就在速度和大小两方面对json和msgpack来做个比较。msgpack支持几乎所有的客户端，这里用最熟悉的php来做测试。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>windows用户自行到<a href="http://pecl.php.net/package/msgpack" target="_blank" rel="external">http://pecl.php.net/package/msgpack</a>下载dll</p>
+<p>linux用户下载源码包以后，执行以下操作<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash">/path/to/phpize</span></div><div class="line"><span class="meta">$</span><span class="bash">./configure</span></div><div class="line"><span class="meta">$</span><span class="bash">make &amp;&amp; make install</span></div></pre></td></tr></table></figure></p>
+<h2 id="大小"><a href="#大小" class="headerlink" title="大小"></a>大小</h2><p>先来个最简单的看看：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$arr = <span class="keyword">array</span>(<span class="string">'name'</span>=&gt;<span class="string">"feixiao"</span>,<span class="string">'sex'</span>=&gt;<span class="string">'男'</span>,<span class="string">'company'</span>=&gt;<span class="string">'huayun'</span>,<span class="string">'age'</span>=&gt;<span class="number">31</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">"Json:"</span>.strlen(json_encode($arr)).<span class="string">"\n"</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">"Messagepack:"</span>.strlen(msgpack_pack($arr)).<span class="string">"\n"</span>;</div></pre></td></tr></table></figure></p>
+<p><img src="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack.png" alt=""></p>
+<p>将以上数据等比例放大20倍、200倍、2000倍、20000倍，分别测试1K，10K，100K，1000K大小数据，得到的结果也是等比例。所以体积越大的数据，msgpak压缩效果越好。</p>
+<p><img src="http://7xiar4.com1.z0.glb.clouddn.com/space_json_msgpack2.png" alt=""></p>
+<h2 id="速度"><a href="#速度" class="headerlink" title="速度"></a>速度</h2><p>把刚才的数组，encode、decode重复1000万次：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">$arr = <span class="keyword">array</span>(<span class="string">'name'</span>=&gt;<span class="string">"feixiao"</span>,<span class="string">'sex'</span>=&gt;<span class="string">'男'</span>,<span class="string">'company'</span>=&gt;<span class="string">'huayun'</span>,<span class="string">'age'</span>=&gt;<span class="number">31</span>);</div><div class="line"></div><div class="line">$runtime_start = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>;$i&lt;<span class="number">10000000</span>;$i++) &#123;</div><div class="line">  json_decode(json_encode($arr));</div><div class="line">&#125;</div><div class="line">$runtime_stop = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">"JSON processed : "</span>.round($runtime_stop-$runtime_start,<span class="number">6</span>).<span class="string">" second(s)\n"</span>;</div><div class="line"></div><div class="line">$runtime_start = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>;$i&lt;<span class="number">10000000</span>;$i++) &#123;</div><div class="line">  msgpack_unpack(msgpack_pack($arr));</div><div class="line">&#125;</div><div class="line">$runtime_stop = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">"MsgPack processed : "</span>.round($runtime_stop-$runtime_start,<span class="number">6</span>).<span class="string">" second(s)"</span>;</div></pre></td></tr></table></figure></p>
+<p>结果：</p>
 <blockquote>
-<p>同样是十年，与其稀里糊涂地活过，目的明确、生气勃勃地活当然令人远为满意。跑步无疑大有魅力：在个人的局限性中，可以让自己有效地燃烧——哪怕是一丁点儿，这便是跑步一事的本质，也是活着一事的隐喻。  by 村上春树 《当我谈跑步时我谈些什么》</p>
+<p>JSON processed : 11.98569 second(s)</p>
+<p>MsgPack processed : 6.654595 second(s)</p>
 </blockquote>
-<p>##训练</p>
-<p>14年中在小区里断断续续跑过几次，后来天气越来越热也就没再坚持，从这可以看出我真的不是一个意志坚强的人。</p>
-<p>到了年底，报完名离比赛还有3个多月的时间，又开始信心满满的做好训练计划开始行动了。无奈当时天气实在太冷，又是在晚上9点左右夜跑，不到3次我就感冒了，持续了1个月才好。等感冒才好，又遇上了将近1个月的阴雨天气，等天气好了，春节也快开始了。总之，我到比赛前1个礼拜都没完整的训练，期间自然遭受了莫莫无数的鄙视。</p>
-<p>痛定思痛，在还有1周比赛的情况下去办了健身房会员。1个礼拜去了5天累计跑程20KM。</p>
-<p>以上，就是我参加半马前累积的跑量。</p>
-<p>##比赛</p>
-<p>整个过程槽点太多，列表说吧。</p>
-<ol>
-<li>前天晚上紧张到失眠，主要是看多了比赛中猝死的案例，想到自己心肺功能退化的厉害，总忍不住想不忍言之事（奇怪当时从没想过放弃，想得最多的是意外）。后来看了2部半电影一分钟没睡，撑到5点半爬起来去赶车。</li>
-<li>小区门口的煎饼摊那天怎么没了，是我起的太早么？后来我在公交车上没有水喝忍着无比恶心啃完了4根士力架。</li>
-<li>车上开始肚子疼，偏偏那天比赛的人实在太多，交通又进行管制，在快到体育场的时候彻底堵上了。在车里满满的运动员的抗议下，5分钟后司机打开了车门让我们走过去。</li>
-<li>我冲到了场内找到存包处，在这里做出了当天唯一正确的决定，先把衣服换了。由于时间紧急，误把导汗带和手机都放在了包里存了起来。</li>
-<li>存完包百米冲刺开始找厕所，广场上到处都是临时厕所，每个门前都有男有女排了好长的队。无奈只好饶了大半个体育场，在一个看台找到了人相对少点的厕所，当然每个蹲坑门前还是得排队。</li>
-<li>终于轮到我蹲下时，听到了广播里比赛开始的枪声。</li>
-<li>比赛起点在太湖大道上，虽说是双向八车道的，可是中间有个很宽的绿化带，所以只能一边的4车道可以使用。当我赶到队伍末尾时，整个队伍还在慢腾腾的挪动。过起点线时，时钟已经过了15分钟。</li>
-<li>人太多开始的5公里跑得实在太慢，路上各路大神又开始了表演。总之跑的实在难受，到后来蠡湖边上就好了很多。</li>
-<li>人在画中跑，最美马拉松的名号果然名不虚传。边上上海过来的小伙伴跟我吐槽上海马拉松都是在市里主干道上跑，顿时让我有了某种自豪。</li>
-<li>5公里处，遇到两老爷子，一问年龄，一个76一个83，我除了比一下大拇指说一声老爷子牛逼，就只能加速超过他们，这样心里才平衡了点。</li>
-<li>千万不能小看胖子，特别是穿超短的女胖子，我愣是跟丢了这样一个MM。</li>
-<li>洋人体质果然和国人有差别。跟在一个1米85的洋妞后面（奇怪我怎么老是跟在女生后面，难道我还隐藏着痴汉属性，也对，年纪算是符合了），她下身穿着紧身裤，所以跟着她跑的几公里路程中，我眼睛的焦点只在那两个不停上下抖动的肥臀上。一边跑一边心里不住感叹，真大啊。最后自然还是跟丢了，不过估计主要原因是我被晃晕了。</li>
-<li>千万不能乱喝水。踏上赛道的那一刻，心情突然平静下来，感觉真的和赛道融为一体。这种感觉大多数人都有过，就是你完全沉浸某件事的那种感觉。就这样一直跑了8公里，竟然感觉不到一丝疲惫，直到遇到了第一个补水站。看到很多人停下喝水，我也凑热闹去拿了两杯饮料。喝完再跑起来，感觉完全不对了，就是冲刺到终点以后的感觉。节奏一被打乱，后面一大半的赛程再也没有跑过一口气2公里以上。这也是以后要总结的地方。</li>
-<li>15公里处，右小腿开始轻微抽筋，右膝疼痛。这时有点慌乱，不知该怎么做。放慢速度继续跑了一会，反应加重，只能停下做了会拉伸。</li>
-<li>17公里开始，基本已不能匀速跑。只能拖着腿慢走，感觉好一点就小跑上两步，没几步就会抽筋，然后停下等抽筋过去继续慢走，如此反复最终直到终点。</li>
-<li>因为抽筋落在了最后，每次经过补给站都只剩下了矿泉水，饮料没有，香蕉更是一根都没吃到，后来医生连喷雾都用完了。锡马你们就不能准备的充分点啊！！！</li>
-</ol>
-<p>##赛后<br>最后赶在关门时间前到达了终点。不管成绩如何，我从没有放弃,只有坚持下去的信念。能够完赛对于那时的我来说本身就是一种胜利，已经有多久没体会过这种喜悦了？</p>
-<p>##成绩晒单</p>
-<p>啥都不说了，上图</p>
-<p><img src="http://7xiar4.com1.z0.glb.clouddn.com/img/锡马成绩.jpg" alt=""></p>
-<p>##结语</p>
-<p>人丑就要多读书，人丑还要多跑步。</p>
-<p>跑步不出意外将会是我以后会一直参与的运动，每年的锡马估计也不会缺席，是时候约个跑友了。</p>
-<p>最后，向所有姑娘推荐《<a href="http://book.douban.com/subject/25778505/" target="_blank" rel="external">和潇洒姐塑身100天</a>》这本书，这本书是《女人明白要趁早》系列中的一本。相信我，看完你会敬佩她这种强计划性和执行力的女人。如果有姑娘明年也想参加马拉松，记得约我哦。</p>
-<p>说的就是你，费太太！！！</p>
+<p>结果还是很明显的，对于更大的数据就不再详细展开。</p>
+<h2 id="和base64比较"><a href="#和base64比较" class="headerlink" title="和base64比较"></a>和base64比较</h2><p>选取一张5K不到的图片，读取图片内容到字符串中，对字符串做编码解码，直接上测试结果：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>大小</th>
+<th style="text-align:center">编码时间（秒）</th>
+<th style="text-align:center">解码时间（秒）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base64</td>
+<td>5860</td>
+<td style="text-align:center">0.000010</td>
+<td style="text-align:center">0.000017</td>
+</tr>
+<tr>
+<td>msgpack</td>
+<td>4398</td>
+<td style="text-align:center">0.000005</td>
+<td style="text-align:center">0.000012</td>
+</tr>
+</tbody>
+</table>
+<p>选取一个50K左右的文档，结果如下<br>||大小| 编码时间（秒）|解码时间（秒）|<br>|—|————-|:————-:|:—–:|<br>|base64|68740|0.000044|0.000195|<br>|msgpack|51556|0.000028|0.000040|</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过上述对比，发现MessagePack确实做到了更快更小，为什么没有流行的原因，就是json具有易读性，很多配置文件用json方式就可以看出。</p>
+<p>MessagePack虽然也有JS的库，但是用浏览器来解析MessagePack是一件很悲剧的事情，毕竟JSON是javascript亲生的，用起来自然比MessagePack要容易。所以如果是<strong>api接口或是和浏览器的通信，用JSON是天经地义的事情</strong>。</p>
+<p><strong>MessagePack主要用于结构化数据的缓存和存储</strong>，最常用的就是key-value存储系统，比如redis，不但占用空间更小，而且数据解析速度更快。另外在系统内部中，如果有用到微服务之间需要二进制文件的传输，也可以用MessagePack来代替base64，以获得更好的效率。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>Redis 4.0 中，有一个重大改进：modules 模块系统，意味着我们可以对redis扩展，现在就已经有了让redis支持json数据类型的模块，叫做rejson，demo如下：</p>
+<p><img src="https://raw.githubusercontent.com/RedisLabsModules/rejson/master/docs/images/demo.gif" alt=""></p>
+<p>这样少了序列化步骤，加上redis自身的原子化操作，可以避免string出现的并发问题（读取key，反序列化，修改内部某个value，序列化，再存储key）。这个以后有需求可以再研究。</p>
 
       
     </div>
@@ -335,11 +343,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/锡马/" rel="tag">#锡马</a>
+            <a href="/tags/msgpack/" rel="tag">#msgpack</a>
           
-            <a href="/tags/跑步/" rel="tag">#跑步</a>
-          
-            <a href="/tags/半马/" rel="tag">#半马</a>
+            <a href="/tags/redis/" rel="tag">#redis</a>
           
         </div>
       
@@ -348,17 +354,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/03/25/why-blog/" rel="next" title="每个人都应该有个博客">
-                <i class="fa fa-chevron-left"></i> 每个人都应该有个博客
+              <a href="/2016/01/03/install-php7-and-exts/" rel="next" title="php7和一些扩展的安装配置">
+                <i class="fa fa-chevron-left"></i> php7和一些扩展的安装配置
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/28/talk-about-home-education/" rel="prev" title="一次关于家庭教育的讲座">
-                一次关于家庭教育的讲座 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
